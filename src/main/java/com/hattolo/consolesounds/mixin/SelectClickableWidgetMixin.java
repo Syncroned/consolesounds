@@ -3,18 +3,17 @@ package com.hattolo.consolesounds.mixin;
 import com.hattolo.consolesounds.ConsoleSoundsClient;
 import com.hattolo.consolesounds.ConsoleSoundsConfig;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
-@Mixin(ClickableWidget.class)
+@Mixin(AbstractWidget.class)
 public class SelectClickableWidgetMixin {
 	private static float randFloat(float min, float max) {
 		Random rand = new Random();
@@ -23,13 +22,13 @@ public class SelectClickableWidgetMixin {
 
 	@Inject(at = @At("RETURN"), method = "isHovered")
 	private void isHovered(CallbackInfoReturnable<Boolean> cir) {
-		var widget = (ClickableWidget) (Object) this;
+		var widget = (AbstractWidget) (Object) this;
 
 		if (cir.getReturnValue()) {
 			if (!widget.active) return;
 			if (!selected) {
 				selected = true;
-				if (AutoConfig.getConfigHolder(ConsoleSoundsConfig.class).getConfig().enableHoverSounds) MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(ConsoleSoundsClient.UI_SELECT_EVENT, randFloat(0.95f, 1.05f)));
+				if (AutoConfig.getConfigHolder(ConsoleSoundsConfig.class).getConfig().enableHoverSounds) Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(ConsoleSoundsClient.UI_SELECT_EVENT, randFloat(0.95f, 1.05f)));
 			}
 		}
 		else {
@@ -38,11 +37,4 @@ public class SelectClickableWidgetMixin {
 	}
 
 	Boolean selected = false;
-	/*
-	@Inject(at = @At("HEAD"), method = "renderTooltip")
-	private void renderTooltip(CallbackInfo info) {
-		System.out.println("This line is printed by an example mod mixin!");
-		MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(ConsoleModClient.UI_SELECT_EVENT, 1.0F));
-	}
-	*/
 }

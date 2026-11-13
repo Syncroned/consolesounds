@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.hattolo.consolesounds.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
   ],
   "client": [
@@ -16,7 +16,8 @@
     "CraftItemStackMixin",
     "SlotClickedRecipeBookMixin",
     "OpenPauseMenuMixin",
-    "ScrollSliderWidgetMixin"
+    "ScrollSliderWidgetMixin",
+    "GhostSlotsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
